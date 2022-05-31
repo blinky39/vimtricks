@@ -13,3 +13,12 @@ use \<Leader\>y to copy selection to clipboard
 ```vim
 noremap <Leader>a ggVG
 ```
++ remove background(use terminal backgroud, so you can get transparency)
+```vim
+function Removebg ()
+    hi Normal guibg=NONE ctermbg=NONE
+    hi NonText guibg=NONE ctermbg=NONE
+    hi LineNr guibg=NONE ctermbg=NONE
+endfunction
+noremap <silent> <Leader>b :call Removebg()<CR>
+```
