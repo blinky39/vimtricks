@@ -1,8 +1,11 @@
-syntax on
+"syntax on
 filetype on
 filetype plugin on
 filetype indent on
 let mapleader = "\<Space>"
+let $VIMRC='~/.vimrc'
+let $THEME='onedark'
+" jellybeans onehalfdark onedark nord gruvbox dracula
 
 call plug#begin('~/.vim/plugged')
 " Plug 'lervag/vimtex'
@@ -11,101 +14,185 @@ call plug#begin('~/.vim/plugged')
 "let g:vimtex_quickfix_mode=0
 "set conceallevel=1
 "let g:tex_conceal='abdmg'
-Plug 'sirver/ultisnips'
-let g:UltiSnipsExpandTrigger = '<tab>'
-let g:UltiSnipsJumpForwardTrigger = '<tab>'
-let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
-"let g:UltiSnipsJumpForwardTrigger="<c-b>"
-"let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-"let g:UltiSnipsEditSplit="vertical"
-Plug 'honza/vim-snippets'
+"Plug 'honza/vim-snippets'
+Plug 'SirVer/ultisnips'
+let g:UltiSnipsEditSplit='vertical'
+let g:UltiSnipsExpandTrigger="<CR>"
+let g:UltiSnipsJumpForwardTrigger="<TAB>"
+let g:UltiSnipsJumpBackwardTrigger="<S-TAB>"
+Plug 'jayli/vim-easycomplete'
 Plug 'preservim/nerdcommenter'
 Plug 'preservim/nerdtree'
-Plug 'jiangmiao/auto-pairs'
 Plug 'voldikss/vim-floaterm'
+Plug 'LunarWatcher/auto-pairs'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-repeat'
 Plug 'itchyny/lightline.vim'
-"Plug 'dylanaraps/wal.vim'
+Plug 'iamcco/markdown-preview.nvim'
 "Plug 'gilligan/vim-lldb'
-
+" themes
+Plug 'sonph/onehalf', { 'rtp': 'vim'  }
+Plug 'morhetz/gruvbox'
+Plug 'joshdick/onedark.vim'
+Plug 'dracula/vim', { 'as': 'dracula'  }
 call plug#end()
 
-"colorscheme wal
-colorscheme jellybeans
-set background=dark
-let g:floaterm_keymap_toggle = '<F12>'
+" themes
+if exists('+termguicolors')
+    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+    set termguicolors
+endif
+
+" set background=dark
+colorscheme $THEME
+function Removebg ()
+    hi Normal guibg=NONE ctermbg=NONE
+    hi NonText guibg=NONE ctermbg=NONE
+    hi LineNr guibg=NONE ctermbg=NONE
+endfunction
+noremap <silent> <Leader>b :call Removebg()<CR>
 let g:lightline = {
-      \ 'colorscheme': 'jellybeans',
-      \ 'active': {
-      \   'left': [ [ 'mode', 'paste'  ],
-      \             [ 'readonly', 'filename', 'modified', 'helloworld'  ] ]
-      \
-      \   },
-      \ 'component': {
-      \   'helloworld': 'Try Harder!'
-      \ 
-      \  },
-      \ }
-" lightline colorschemes:
-" OldHope PaperColor Tomorrow apprentice ayu darcula default
-" deus jellybeans landscape meteria material molokai nord one powerline
-" powerlineish rosepine selenized seoul256 simpleblack solarized
-" srcery_drk wombat
+            \ 'colorscheme': $THEME,
+            \ 'active': {
+                \   'left': [ [ 'mode', 'paste'  ],
+                \             [ 'readonly', 'filename', 'modified', 'helloworld'  ] ]
+                \
+                \   },
+                \ 'component': {
+                    \   'helloworld': 'Try Harder!'
+                    \
+                    \  },
+                    \ }
+
+" plugin settings
+nmap <Leader>m <Plug>MarkdownPreviewToggle
+noremap <F11> :FloatermSend<CR>
+inoremap <F11> <ESC>:FloatermSend<CR>
+let g:AutoPairsFlyMode = 1
+let g:floaterm_keymap_toggle = '<Leader>f'
+let g:floaterm_position = 'bottom'
+let g:floaterm_width = 1.0
+let g:floaterm_height = 0.4
+nnoremap <Leader>n :NERDTreeToggle<CR>
+noremap <c-s> <ESC>:UltiSnipsEdit<CR>
+imap <c-s> <ESC>:UltiSnipsEdit<CR>
+" also use c-j/c-k or tab/s-tab for next/previous suggest
+inoremap <expr> <c-j> pumvisible() ? "\<C-n>" : "\<c-j>"
+inoremap <expr> <c-k> pumvisible() ? "\<C-p>" : "\<c-k>"
+inoremap <expr> <tab> pumvisible() ? "\<C-n>" : "\<tab>"
+inoremap <expr> <s-tab> pumvisible() ? "\<C-p>" : "\<s-tab>"
+
+nnoremap <silent> <C-j> :EasyCompleteNextDiagnostic<CR>
+nnoremap <silent> <C-k> :EasyCompletePreviousDiagnostic<CR>
+nnoremap <Leader>gr :EasyCompleteReference<CR>
+nnoremap <Leader>gd :EasyCompleteGotoDefinition<CR>
+nnoremap <Leader>rn :EasyCompleteRename<CR>
+nnoremap <Leader>gb :BackToOriginalBuffer<CR>
+let g:easycomplete_lsp_checking = 0
+let g:easycomplete_tab_trigger="<c-space>"
+" diable lsp diagnostics
+let g:easycomplete_diagnostics_enable = 0
+
+" edit
+set autoindent
+set expandtab
+set noswapfile
+set numberwidth=1
+set shiftwidth=2
+set softtabstop=2
+set pastetoggle=<F2>
+set smarttab
+"set splitbelow splitright
+set encoding=utf-8
+autocmd FileType * setlocal formatoptions-=cro
+set completeopt+=popup
+
+" look and feel
+set mousehide
+set number relativenumber
+"set noshowcmd
+set hlsearch
+set ignorecase
+set incsearch
+set smartcase
+set title
+set laststatus=2
+set wrap
+set linebreak
+" Give more space for displaying messages.
+"set cmdheight=2
+
+
+" what
+set autoread
+set cin
+" Enable autocompletion:
+set wildmode=longest,list
+set history=1000
+set vb t_vb=
+set sw=4
+set iskeyword+=:
+set clipboard+=unnamed
+set shellslash
+
 
 let c_syntax_for_h=""
 let g:netrw_keepdir = 0
 let g:netrw_localrmdir='rm -r'
 let g:tex_flavor='latex'
-map <c-n> <ESC>:NERDTreeToggle<CR>
-set laststatus=2
 
-" save and quit in any mode, alt+w/q
-map <a-w> <Esc>:w<CR>
-map <a-q> <Esc>:q<CR>
-
-" jump between {}
-noremap <TAB> %
-" split: horizontal, vertical
-nnoremap <silent> <Leader>h :new<CR>
-nnoremap <silent> <Leader>v :vnew<CR>
-
+" save and quit
 nnoremap <silent> <Leader>q :wq<CR>
 nnoremap <silent> <Leader><ESC> :q!<CR>
 nnoremap <silent> <Leader>w :w<CR>
+command CFG :e $VIMRC
+autocmd BufWrite $VIMRC :!source $VIMRC
 
+" jump between {}
+noremap <TAB> %
+nnoremap <Leader>; $a;<Esc>
 
+" split: horizontal, vertical
+nnoremap <silent> <Leader>h :new<CR>
+nnoremap <silent> <Leader>v :vnew<CR>
 " panel navigation
-nnoremap <c-h> <c-w>h
-nnoremap <c-l> <c-w>l
+noremap <c-h> <c-w>h
+noremap <c-l> <c-w>l
 nnoremap <c-j> <c-w>j
 nnoremap <c-k> <c-w>k
 
-noremap <Leader>b ^
-noremap <Leader>e <ESC>:e .<CR>
-noremap <Leader>r <C-R>
+" tabs
+nnoremap <Leader>t <ESC>:tabe<CR>
+nnoremap <Leader>[ <ESC>:tabp<CR>
+nnoremap <Leader>] <ESC>:tabn<CR>
+
+" buffer
+nnoremap <silent> <Leader>' :ls<CR>
+nnoremap <silent> <Leader>, :bp<CR>
+nnoremap <silent> <Leader>. :bn<CR>
+
 noremap <Leader>u i_<ESC>r
-noremap <Leader>n :vs
-noremap <Leader>o <C-O>
-noremap <Leader>i <C-I>
-noremap <Leader>a ggVG
+noremap <a-a> ggVG
 noremap <Leader>/ ^i// <ESC> " fast comment cpp
 noremap <Leader>\ ^xxxh<ESC> " fast uncomment cpp
+nnoremap S :%s//g<Left><Left>
+
 " quick copy to clipboard
+" only work in nvim?
+"noremap ;y "+y
+"noremap ;p "+p
+" works in vim
 vnoremap <silent> <Leader>y :w !xclip -in -selection clipboard<CR><ESC>
-noremap <Leader>s :source ~/.vimrc <CR>
+
 
 command! Prog :e ~/Documents/programming/
 "autocmd FocusLost * redraw!
 "command! LLDB :!clang++ -fsanitize=address -std=c++17 -O0 -g -o "%<" "%" && lldb %<
 
-
-autocmd FileType cpp setlocal makeprg=g\+\+\ %\ \-g\ \-std\=c\+\+17\ \-Wall
-autocmd FileType haskell setlocal makeprg=ghci\ %
-autocmd FileType python setlocal makeprg=python3\ %
-autocmd FileType sh setlocal makeprg=%
-
 " use F3 to make
-noremap <F3> <ESC> :w <CR> :make <CR>
-inoremap <F3> <ESC> :w <CR> :make <CR>
+noremap <F3> <ESC> :w <CR> :make %< <CR>
+inoremap <F3> <ESC> :w <CR> :make %< <CR>
 
 " F4 python3 run
 noremap <F4> <ESC> :w !python3 <CR>
@@ -125,34 +212,3 @@ inoremap<F9> <ESC> :w<CR> :!lldb %< <CR>
 " use F10 for the same thing but provides a input file named inp.
 noremap <F10> <ESC> :w <CR> :!clang++ -std=c++17 -Wall -O2 -o %< % && ./%< < inp <CR>
 inoremap<F10> <ESC> :w <CR> :!clang++ -std=c++17 -Wall -O2 -o "%<" "%" && "./%<" < inp<CR>
-"set exrc
-
-noremap <F1> <ESC>:tabprev <CR>
-vnoremap <F1> <ESC>:tabprev <CR>
-inoremap <F1> <ESC>
-
-
-set autoindent
-set autoread
-set cin
-set expandtab
-set history=1000
-set hlsearch
-set ignorecase
-set incsearch
-set mousehide
-set noswapfile
-set pastetoggle=
-set smarttab
-set vb t_vb=
-set sw=4
-set iskeyword+=:
-set title
-set clipboard+=unnamedplus
-"set noruler
-set number relativenumber
-set noshowcmd
-set numberwidth=1
-set shiftwidth=2
-set tabstop=2
-set shellslash
