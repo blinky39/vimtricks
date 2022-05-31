@@ -3,9 +3,9 @@ filetype on
 filetype plugin on
 filetype indent on
 let mapleader = "\<Space>"
-let $THEME='jellybeans'
+let $THEME='nightfly'
 set background=dark
-" jellybeans onehalfdark onedark nord gruvbox dracula
+" jellybeans onehalfdark onedark nord gruvbox dracula iceberg nightfly everforest
 command CFG :e $MYVIMRC
 autocmd BufWritePost $MYVIMRC :so $MYVIMRC
 
@@ -27,6 +27,8 @@ call plug#begin('~/.vim/plugged')
 Plug 'preservim/nerdtree'
 Plug 'voldikss/vim-floaterm'
 Plug 'iamcco/markdown-preview.nvim'
+Plug 'ap/vim-css-color'
+Plug 'ctrlpvim/ctrlp.vim'
 "Plug 'gilligan/vim-lldb'
 " edit
 "Plug 'honza/vim-snippets'
@@ -42,6 +44,9 @@ let g:UltiSnipsJumpForwardTrigger="<TAB>"
 let g:UltiSnipsJumpBackwardTrigger="<S-TAB>"
 " themes
 Plug 'itchyny/lightline.vim'
+Plug 'cocopon/iceberg.vim'
+Plug 'bluz71/vim-nightfly-guicolors'
+Plug 'sainnhe/everforest'
 Plug 'arcticicestudio/nord-vim'
 Plug 'nanotech/jellybeans.vim'
 Plug 'morhetz/gruvbox'
@@ -62,7 +67,10 @@ let g:floaterm_keymap_toggle = '<Leader>f'
 let g:floaterm_position = 'bottom'
 let g:floaterm_width = 1.0
 let g:floaterm_height = 0.4
-nnoremap <Leader>n :NERDTreeToggle<CR>
+nnoremap <F1> :NERDTreeToggle<CR>
+let NERDTreeMinimalUI = 1
+" Exit Vim if NERDTree is the only window remaining in the only tab.
+autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
 noremap <c-s> <ESC>:UltiSnipsEdit<CR>
 imap <c-s> <ESC>:UltiSnipsEdit<CR>
 " also use c-j/c-k or tab/s-tab for next/previous suggest
